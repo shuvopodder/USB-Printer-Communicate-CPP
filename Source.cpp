@@ -18,7 +18,7 @@ int main()
 		&InterfaceClassGuid,
 		NULL,
 		NULL,
-		DIGCF_ALLCLASSES | DIGCF_PRESENT);
+		DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
 
 	if (DeviceInfoSet == INVALID_HANDLE_VALUE)
 	{
