@@ -58,12 +58,12 @@ int main()
 		size = 0;
 
 		SetupDiGetDeviceInterfaceDetail(
-			DeviceInfoSet, //[in]            HDEVINFO                           DeviceInfoSet,
-			&devInterfaceData, //[in]            PSP_DEVICE_INTERFACE_DATA          DeviceInterfaceData,
-			NULL, //[out, optional] PSP_DEVICE_INTERFACE_DETAIL_DATA_A DeviceInterfaceDetailData,
-			NULL, //[in]            DWORD                              DeviceInterfaceDetailDataSize,
-			&size, //[out, optional] PDWORD                             RequiredSize,
-			NULL//[out, optional] PSP_DEVINFO_DATA                   DeviceInfoData
+			DeviceInfoSet,					//[in]            HDEVINFO  DeviceInfoSet,
+			&devInterfaceData,				//[in]            PSP_DEVICE_INTERFACE_DATA   DeviceInterfaceData,
+			NULL,							//[out, optional] PSP_DEVICE_INTERFACE_DETAIL_DATA_A DeviceInterfaceDetailData,
+			NULL,							//[in]  DWORD     DeviceInterfaceDetailDataSize,
+			&size,							//[out, optional] PDWORD  RequiredSize,
+			NULL							//[out, optional] PSP_DEVINFO_DATA  DeviceInfoData
 		);
 		DeviceInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
 
@@ -76,12 +76,12 @@ int main()
 			
 
 			if (!SetupDiGetDeviceInterfaceDetail(
-				DeviceInfoSet, //[in]            HDEVINFO                           DeviceInfoSet,
-				&devInterfaceData, //[in]            PSP_DEVICE_INTERFACE_DATA          DeviceInterfaceData,
-				devInterfaceDetailsData, //[out, optional] PSP_DEVICE_INTERFACE_DETAIL_DATA_A DeviceInterfaceDetailData,
-				size, //[in]            DWORD                              DeviceInterfaceDetailDataSize,
-				0, //[out, optional] PDWORD                             RequiredSize,
-				&DeviceInfoData //[out, optional] PSP_DEVINFO_DATA                   DeviceInfoData
+				DeviceInfoSet,				//[in]   HDEVINFO  DeviceInfoSet,
+				&devInterfaceData,			//[in]            PSP_DEVICE_INTERFACE_DATA  DeviceInterfaceData,
+				devInterfaceDetailsData,	//[out, optional] PSP_DEVICE_INTERFACE_DETAIL_DATA_A DeviceInterfaceDetailData,
+				size,						//[in]  DWORD  DeviceInterfaceDetailDataSize,
+				0,							//[out, optional] PDWORD  RequiredSize,
+				&DeviceInfoData				//[out, optional] PSP_DEVINFO_DATA  DeviceInfoData
 			)) {
 				free(devInterfaceDetailsData);
 				SetupDiDestroyDeviceInfoList(DeviceInfoSet);
@@ -116,14 +116,14 @@ int main()
 	}
 	
 	//WRITE TO PRINT BUFFER
-	
+/*	
 	char str[] = "Hello World!";
 	char* buffer = new char[strlen(str)];
-	strcpy(buffer, str);
-/*
+	strcpy(buffer, str);*/
+
 	std::string str = "Hello, World!";
 	char* buffer = new char[sizeof(str)];
-	std::strcpy(buffer, str.c_str());*/
+	std::strcpy(buffer, str.c_str());
 
 	DWORD lpNumberOfBytesWritten = { 0 };
 
@@ -140,7 +140,7 @@ int main()
 		buffer,								//[in]                LPCVOID      lpBuffer,
 		strlen(buffer),						//[in]                DWORD        nNumberOfBytesToWrite,
 		&lpNumberOfBytesWritten,	    	//[out, optional]     LPDWORD      lpNumberOfBytesWritten,
-		&ol								//[in, out, optional] LPOVERLAPPED lpOverlapped
+		&ol									//[in, out, optional] LPOVERLAPPED lpOverlapped
 	);
 
 	BOOL boolean = GetLastError();
