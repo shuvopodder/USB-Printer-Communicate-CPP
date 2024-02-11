@@ -3,6 +3,7 @@
 #include "Header.h"
 #include <iostream>
 
+//GUID for printer device
 GUID GUID_DEVINTERFACE_USB_PRINT = { 0x28d78fad, 0x5a12, 0x11D1, 0xae, 0x5b, 0x00, 0x00, 0xf8, 0x03, 0xa8, 0xc2 };
 
 
@@ -12,12 +13,14 @@ int main()
 {
 	HDEVINFO DeviceInfoSet;
 	GUID InterfaceClassGuid = GUID_DEVINTERFACE_USB_PRINT;
-	DWORD MemberIndex = 0;// deviceCount = 0;
+	DWORD MemberIndex = 0; // deviceCount = 0;
 	DWORD size;
 	SP_DEVICE_INTERFACE_DATA devInterfaceData;
 	PSP_DEVICE_INTERFACE_DETAIL_DATA devInterfaceDetailsData;
-	//PSP_DEVINFO_DATA DeviceInfoData;
 	SP_DEVINFO_DATA DeviceInfoData;
+
+	char devicePath[1024]; //printing support path
+	HANDLE printerHandle;
 
 
 	DeviceInfoSet = SetupDiGetClassDevs(
@@ -36,10 +39,10 @@ int main()
 
 	if (!SetupDiEnumDeviceInterfaces(
 		DeviceInfoSet,
-		NULL,				//DeviceInfoData,
-		&InterfaceClassGuid,//[in]  const GUID * InterfaceClassGuid,
-		MemberIndex,		//[in]  DWORD  MemberIndex,
-		&devInterfaceData    //[out] PSP_DEVICE_INTERFACE_DATA DeviceInterfaceData
+		NULL,						//DeviceInfoData,
+		&InterfaceClassGuid,		//[in]  const GUID * InterfaceClassGuid,
+		MemberIndex,				//[in]  DWORD  MemberIndex,
+		&devInterfaceData			//[out] PSP_DEVICE_INTERFACE_DATA DeviceInterfaceData
 	)) {
 		std::cout << "No Printer Device Found!" << std::endl;
 	}
@@ -49,7 +52,7 @@ int main()
 
 	while (SetupDiEnumDeviceInterfaces(DeviceInfoSet, NULL, &InterfaceClassGuid, MemberIndex, &devInterfaceData))
 	{
-		char devicePath[1024];
+		//char devicePath[1024];
 
 		MemberIndex++;
 		size = 0;
@@ -87,12 +90,62 @@ int main()
 			
 			std::cout << "Device Path:\t" << devInterfaceDetailsData->DevicePath << std::endl;
 			strcpy(devicePath, devInterfaceDetailsData->DevicePath);
-
-
 		}
 
 	}
+
+
+	//createFile or open device to write printing data
+
+	printerHandle = CreateFile(
+		devicePath,							//_In_ LPCWSTR lpFileName,
+		GENERIC_WRITE,						//_In_ DWORD dwDesiredAccess,
+		FILE_SHARE_READ | FILE_SHARE_WRITE, //_In_ DWORD dwShareMode,
+		NULL,								//_In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+		OPEN_ALWAYS,						//_In_ DWORD dwCreationDisposition,
+		FILE_FLAG_OVERLAPPED,				//_In_ DWORD dwFlagsAndAttributes,
+		NULL								//_In_opt_ HANDLE hTemplateFile
+	);
+
+	if (printerHandle == INVALID_HANDLE_VALUE) {
+		std::cout << "Error to open the printer!!!" << std::endl;
+		return 0;
+	}
+	else {
+		std::cout << "Created!!! Printer file open for printing data" << std::endl;
+	}
 	
-	
+	//WRITE TO PRINT BUFFER
+	/*
+	char str[] = "Hello World!";
+	char* buffer = new char[strlen(str)];
+	strcpy(buffer, str);*/
+
+	std::string str = "Hello, World!";
+	char* buffer = new char[sizeof(str)];
+	std::strcpy(buffer, str.c_str());
+
+	DWORD lpNumberOfBytesWritten = { 0 };
+
+	BOOL bErrorFlaf = WriteFile(
+		printerHandle,						//[in]                HANDLE       hFile,
+		buffer,								//[in]                LPCVOID      lpBuffer,
+		strlen(buffer),						//[in]                DWORD        nNumberOfBytesToWrite,
+		&lpNumberOfBytesWritten,			//[out, optional]     LPDWORD      lpNumberOfBytesWritten,
+		NULL								//[in, out, optional] LPOVERLAPPED lpOverlapped
+	);
+
+	BOOL boolean = GetLastError();
+	std::cout << bErrorFlaf << std::endl;
+
+	//free handle
+	if (printerHandle != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(printerHandle);
+		std::cout << "Free Handle!!!" << std::endl;
+	}
+
+	//SetupDiDestroyDeviceInfoList(DeviceInfoSet);
+	return 0;
 	//std::cout << "Hello, World!" << std::endl;
 }
