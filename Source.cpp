@@ -116,23 +116,31 @@ int main()
 	}
 	
 	//WRITE TO PRINT BUFFER
-	/*
+	
 	char str[] = "Hello World!";
 	char* buffer = new char[strlen(str)];
-	strcpy(buffer, str);*/
-
+	strcpy(buffer, str);
+/*
 	std::string str = "Hello, World!";
 	char* buffer = new char[sizeof(str)];
-	std::strcpy(buffer, str.c_str());
+	std::strcpy(buffer, str.c_str());*/
 
 	DWORD lpNumberOfBytesWritten = { 0 };
+
+	OVERLAPPED ol = { 0 };
+	ol.hEvent = CreateEvent(
+		NULL,								//default security attribute
+		TRUE,								//manual-reset event
+		TRUE,								//initial state = signaled
+		NULL								// unamed event object
+	);
 
 	BOOL bErrorFlaf = WriteFile(
 		printerHandle,						//[in]                HANDLE       hFile,
 		buffer,								//[in]                LPCVOID      lpBuffer,
 		strlen(buffer),						//[in]                DWORD        nNumberOfBytesToWrite,
-		&lpNumberOfBytesWritten,			//[out, optional]     LPDWORD      lpNumberOfBytesWritten,
-		NULL								//[in, out, optional] LPOVERLAPPED lpOverlapped
+		&lpNumberOfBytesWritten,	    	//[out, optional]     LPDWORD      lpNumberOfBytesWritten,
+		&ol								//[in, out, optional] LPOVERLAPPED lpOverlapped
 	);
 
 	BOOL boolean = GetLastError();
