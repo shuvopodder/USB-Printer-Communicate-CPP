@@ -26,3 +26,10 @@ _Step to how you run this project on windows OS._
 ## Tested Printer:
 ### Grozziie Thermal Printer 
 ### Model: TP879 (58mm max paper size)
+
+## References
+1. [Opening a File](https://learn.microsoft.com/en-us/windows/win32/fileio/opening-a-file-for-reading-or-writing)
+2. [Using Streams](https://learn.microsoft.com/en-us/windows/win32/fileio/using-streams)
+3. IPrintWriteStream
+   - [Stream](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/filterpipeline/nf-filterpipeline-iprintwritestream-writebytes)
+   - [StreamFlush](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/filterpipeline/nf-filterpipeline-iprintwritestreamflush-flushdata)
