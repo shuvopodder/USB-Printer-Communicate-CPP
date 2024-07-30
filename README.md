@@ -33,3 +33,4 @@ _Step to how you run this project on windows OS._
 3. IPrintWriteStream
    - [Stream](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/filterpipeline/nf-filterpipeline-iprintwritestream-writebytes)
    - [StreamFlush](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/filterpipeline/nf-filterpipeline-iprintwritestreamflush-flushdata)
+4. [Device Setup Classes](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/system-defined-device-setup-classes-available-to-vendors)
